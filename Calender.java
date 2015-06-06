@@ -1,3 +1,4 @@
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -13,7 +14,7 @@ public class Calender {
         GregorianCalendar d = new GregorianCalendar();
 
         int today = d.get(Calendar.DAY_OF_MONTH);
-        int month = d.get(Calendar.DAY_OF_MONTH);
+        int month = d.get(Calendar.MONTH);
 
         //set d to start data of the month
         d.set(Calendar.DAY_OF_MONTH, 1);
@@ -25,9 +26,51 @@ public class Calender {
 
         //determine the required indentation for the first line
         int indent = 0;
-        while (weekday != firstDayOfWeek){
+        while (weekday != firstDayOfWeek) {
             indent++;
-            d.add(Calendar.DAY_OF_WEEK, -1);
+            d.add(Calendar.DAY_OF_MONTH, -1);
+            weekday = d.get(Calendar.DAY_OF_WEEK);
         }
+
+        //print weekdays name
+        String[] weekDayNames = new DateFormatSymbols().getShortWeekdays();
+        do {
+            System.out.printf("%4s", weekDayNames[weekday]);
+            d.add(Calendar.DAY_OF_MONTH, 1);
+            weekday = d.get(Calendar.DAY_OF_WEEK);
+        } while (weekday != firstDayOfWeek);
+
+        System.out.println();
+        for (int i = 0; i <= indent; i++) {
+            System.out.print("    ");
+        }
+
+        d.set(Calendar.DAY_OF_MONTH, 1);
+        do {
+            //print day
+            int day = d.get(Calendar.DAY_OF_MONTH);
+            System.out.printf("%6d", day);
+
+            //mark current day
+            if (day == today) {
+                System.out.print("*");
+            } else {
+                System.out.print(" ");
+            }
+
+            //advance d to next day
+            d.add(Calendar.DAY_OF_MONTH, 1);
+            weekday = d.get(Calendar.DAY_OF_WEEK);
+
+            //start a new day at the start of week
+            if (weekday == firstDayOfWeek) {
+                System.out.println();
+            }
+
+        } while (d.get(Calendar.MONTH) == month);
+
+        if (weekday != firstDayOfWeek)
+            System.out.println();
+
     }
 }
